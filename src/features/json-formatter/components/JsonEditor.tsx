@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Copy, Trash2, Wand2, ClipboardPaste } from "lucide-react";
+import { Copy, Trash2, Wand2, ClipboardPaste, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../../../ui/components/button";
 import { Textarea } from "../../../ui/components/textarea";
 import { cn } from "../../../libs/utils";
@@ -15,6 +15,7 @@ interface JsonEditorProps {
 export function JsonEditor({ value, onChange, onFormatSuccess }: JsonEditorProps) {
   const [error, setError] = useState<string | null>(null);
   const [formattedJson, setFormattedJson] = useState<string | null>(null);
+  const [isInputOpen, setIsInputOpen] = useState(false);
 
   const handleFormat = useCallback(() => {
     if (!value.trim()) {
@@ -65,10 +66,25 @@ export function JsonEditor({ value, onChange, onFormatSuccess }: JsonEditorProps
   }, [onChange]);
 
   return (
-    <div className="grid h-full grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="flex h-full flex-col gap-4">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Input</h2>
+            <div className="flex items-center gap-2">
+                <h2 className="text-lg font-semibold">Input</h2>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsInputOpen(!isInputOpen)}
+                    title={isInputOpen ? "Hide Input" : "Show Input"}
+                    className="h-8 w-8 p-0"
+                >
+                    {isInputOpen ? (
+                        <ChevronUp className="h-4 w-4" />
+                    ) : (
+                        <ChevronDown className="h-4 w-4" />
+                    )}
+                </Button>
+            </div>
             <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={handlePaste} title="Paste from Clipboard">
                     <ClipboardPaste className="mr-2 h-4 w-4" />
@@ -79,27 +95,31 @@ export function JsonEditor({ value, onChange, onFormatSuccess }: JsonEditorProps
                 </Button>
             </div>
         </div>
-        <Textarea
-          className="flex-1 font-mono resize-none"
-          placeholder="Paste JSON here..."
-          value={value}
-          onChange={(e) => {
-              onChange(e.target.value);
-              setError(null); // Clear error on edit
-          }}
-        />
-        <Button onClick={handleFormat} className="w-full">
-            <Wand2 className="mr-2 h-4 w-4" />
-            Format JSON
-        </Button>
-        {error && (
-            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                Error: {error}
+        {isInputOpen && (
+            <div className="flex flex-col gap-2">
+                <Textarea
+                  className="font-mono resize-none min-h-[200px]"
+                  placeholder="Paste JSON here..."
+                  value={value}
+                  onChange={(e) => {
+                      onChange(e.target.value);
+                      setError(null); // Clear error on edit
+                  }}
+                />
+                <Button onClick={handleFormat} className="w-full">
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    Format JSON
+                </Button>
+                {error && (
+                    <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                        Error: {error}
+                    </div>
+                )}
             </div>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2 min-h-0">
         <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Output</h2>
              <Button
