@@ -144,10 +144,6 @@ export function JsonEditor({
                 setError(null); // Clear error on edit
               }}
             />
-            <Button onClick={handleFormat} className="w-full">
-              <Wand2 className="mr-2 h-4 w-4" />
-              Format JSON
-            </Button>
             {error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
                 Error: {error}
