@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {
@@ -26,9 +26,11 @@ export function JsonEditor({
   const [error, setError] = useState<string | null>(null);
   const [formattedJson, setFormattedJson] = useState<string | null>(null);
   const [isInputOpen, setIsInputOpen] = useState(false);
+  const previousValueRef = useRef<string>(value);
+  const isUserEditingRef = useRef<boolean>(false);
 
   const formatJson = useCallback(
-    (jsonText: string) => {
+    (jsonText: string, skipHistory: boolean = false) => {
       if (!jsonText.trim()) {
         setFormattedJson(null);
         setError(null);
@@ -40,10 +42,9 @@ export function JsonEditor({
         const formatted = JSON.stringify(parsed, null, 2);
         setFormattedJson(formatted);
         setError(null);
-        onFormatSuccess(jsonText); // Save raw value to history, or formatted? Spec says "content"
-        // Actually, better to save the raw input if we want to restore it, OR save formatted.
-        // Spec says: "WHEN JSON が正常に整形される THEN その内容が履歴リストに追加される"
-        // Usually we want to save the valid JSON.
+        if (!skipHistory) {
+          onFormatSuccess(jsonText);
+        }
       } catch (e) {
         setError((e as Error).message);
         setFormattedJson(null);
@@ -52,12 +53,21 @@ export function JsonEditor({
     [onFormatSuccess]
   );
 
+  // Auto-format when value changes from outside (e.g. history selection)
+  useEffect(() => {
+    if (value !== previousValueRef.current) {
+      // If value changed but user is not editing, it's likely from history selection
+      if (!isUserEditingRef.current) {
+        formatJson(value, true); // Skip history to avoid duplicate entries
+      }
+      previousValueRef.current = value;
+      isUserEditingRef.current = false;
+    }
+  }, [value, formatJson]);
+
   const handleFormat = useCallback(() => {
     formatJson(value);
   }, [value, formatJson]);
-
-  // Auto-format if value changes from outside (e.g. history selection)?
-  // No, user might want to edit. But if it comes from history, it is likely already formatted or valid.
 
   const handlePaste = useCallback(async () => {
     try {
@@ -140,6 +150,7 @@ export function JsonEditor({
               placeholder="Paste JSON here..."
               value={value}
               onChange={(e) => {
+                isUserEditingRef.current = true;
                 onChange(e.target.value);
                 setError(null); // Clear error on edit
               }}
