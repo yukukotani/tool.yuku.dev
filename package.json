@@ -9,12 +9,24 @@
     "start": "NODE_ENV=production bun src/index.ts"
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.139.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.554.0",
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "react-syntax-highlighter": "^16.1.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.1.17",
+    "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/bun": "latest"
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "autoprefixer": "^10.4.22",
+    "bun-plugin-tailwind": "^0.1.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
   }
 }

@@ -1,24 +1,14 @@
-import { APITester } from "./APITester";
-import "./index.css";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
+const router = createRouter({ routeTree });
 
-export function App() {
-  return (
-    <div className="app">
-      <div className="logo-container">
-        <img src={logo} alt="Bun Logo" className="logo bun-logo" />
-        <img src={reactLogo} alt="React Logo" className="logo react-logo" />
-      </div>
-
-      <h1>Bun + React</h1>
-      <p>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </p>
-      <APITester />
-    </div>
-  );
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
 }
 
-export default App;
+export function App() {
+  return <RouterProvider router={router} />;
+}
