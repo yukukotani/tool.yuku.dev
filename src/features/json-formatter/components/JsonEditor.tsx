@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Button } from "../../../ui/components/button";
 import { Textarea } from "../../../ui/components/textarea";
-import { cn } from "../../../libs/utils";
 
 interface JsonEditorProps {
   value: string;
@@ -28,27 +27,34 @@ export function JsonEditor({
   const [formattedJson, setFormattedJson] = useState<string | null>(null);
   const [isInputOpen, setIsInputOpen] = useState(false);
 
-  const handleFormat = useCallback(() => {
-    if (!value.trim()) {
-      setFormattedJson(null);
-      setError(null);
-      return;
-    }
+  const formatJson = useCallback(
+    (jsonText: string) => {
+      if (!jsonText.trim()) {
+        setFormattedJson(null);
+        setError(null);
+        return;
+      }
 
-    try {
-      const parsed = JSON.parse(value);
-      const formatted = JSON.stringify(parsed, null, 2);
-      setFormattedJson(formatted);
-      setError(null);
-      onFormatSuccess(value); // Save raw value to history, or formatted? Spec says "content"
-      // Actually, better to save the raw input if we want to restore it, OR save formatted.
-      // Spec says: "WHEN JSON が正常に整形される THEN その内容が履歴リストに追加される"
-      // Usually we want to save the valid JSON.
-    } catch (e) {
-      setError((e as Error).message);
-      setFormattedJson(null);
-    }
-  }, [value, onFormatSuccess]);
+      try {
+        const parsed = JSON.parse(jsonText);
+        const formatted = JSON.stringify(parsed, null, 2);
+        setFormattedJson(formatted);
+        setError(null);
+        onFormatSuccess(jsonText); // Save raw value to history, or formatted? Spec says "content"
+        // Actually, better to save the raw input if we want to restore it, OR save formatted.
+        // Spec says: "WHEN JSON が正常に整形される THEN その内容が履歴リストに追加される"
+        // Usually we want to save the valid JSON.
+      } catch (e) {
+        setError((e as Error).message);
+        setFormattedJson(null);
+      }
+    },
+    [onFormatSuccess]
+  );
+
+  const handleFormat = useCallback(() => {
+    formatJson(value);
+  }, [value, formatJson]);
 
   // Auto-format if value changes from outside (e.g. history selection)?
   // No, user might want to edit. But if it comes from history, it is likely already formatted or valid.
@@ -57,11 +63,13 @@ export function JsonEditor({
     try {
       const text = await navigator.clipboard.readText();
       onChange(text);
+      // Auto-format after pasting
+      formatJson(text);
     } catch (err) {
       console.error("Failed to read clipboard: ", err);
       // Maybe show toast
     }
-  }, [onChange]);
+  }, [onChange, formatJson]);
 
   const handleCopy = useCallback(() => {
     if (formattedJson) {
@@ -105,6 +113,15 @@ export function JsonEditor({
             >
               <ClipboardPaste className="mr-2 h-4 w-4" />
               Paste
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleFormat}
+              title="Format JSON"
+            >
+              <Wand2 className="mr-2 h-4 w-4" />
+              Format
             </Button>
             <Button
               variant="ghost"

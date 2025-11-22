@@ -1,4 +1,4 @@
-import { Trash2, Clock, X } from "lucide-react";
+import { Clock, X } from "lucide-react";
 import { Button } from "../../../ui/components/button";
 import type { HistoryItem } from "../hooks/useJsonHistory";
 
@@ -30,7 +30,11 @@ export function HistoryList({
         <Button
           variant="ghost"
           size="sm"
-          onClick={onClear}
+          onClick={() => {
+            if (window.confirm("すべての履歴を削除しますか？")) {
+              onClear();
+            }
+          }}
           className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive"
         >
           Clear All
@@ -58,7 +62,9 @@ export function HistoryList({
                 className="absolute right-2 top-2 hidden h-6 w-6 text-muted-foreground hover:text-destructive group-hover:flex"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(item.id);
+                  if (window.confirm("この履歴を削除しますか？")) {
+                    onDelete(item.id);
+                  }
                 }}
               >
                 <X className="h-3 w-3" />
@@ -70,4 +76,3 @@ export function HistoryList({
     </div>
   );
 }
-
