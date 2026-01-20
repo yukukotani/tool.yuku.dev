@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development tsx watch server.ts",
+    "dev": "bun --hot server.ts",
     "dev:browser": "esbuild app/assets/*.{ts,tsx} --outbase=app/assets --outdir=dist/assets --bundle --minify --splitting --format=esm --entry-names='[dir]/[name]' --chunk-names='chunks/[name]-[hash]' --sourcemap --watch",
     "build": "esbuild app/assets/*.{ts,tsx} --outbase=app/assets --outdir=dist/assets --bundle --minify --splitting --format=esm --entry-names='[dir]/[name]' --chunk-names='chunks/[name]-[hash]'",
-    "start": "NODE_ENV=production tsx server.ts"
+    "start": "bun server.ts"
   },
   "dependencies": {
     "@remix-run/dom": "^0.0.0-experimental-remix-jam.1",
@@ -15,6 +15,7 @@
     "@remix-run/fetch-router": "^0.14.0",
     "@remix-run/lazy-file": "^4.2.0",
     "@remix-run/node-fetch-server": "^0.13.0",
+    "hono": "^4.11.4",
     "playwright": "^1.57.0"
   },
   "devDependencies": {
