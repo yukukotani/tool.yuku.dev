@@ -1,6 +1,6 @@
 import { type Remix, hydrated } from "@remix-run/dom";
 import { dom } from "@remix-run/events";
-import { routes } from "../../routes.ts";
+import { routes } from "../routes.ts";
 
 const MAX_HISTORY_ITEMS = 50;
 const PREVIEW_LENGTH = 60;

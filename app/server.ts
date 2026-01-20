@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { router } from './app/router.ts'
+import { router } from './router.ts'
 
 const app = new Hono()
 

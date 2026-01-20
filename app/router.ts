@@ -1,5 +1,5 @@
 import { createRouter } from '@remix-run/fetch-router'
-import { routes } from '../routes.ts'
+import { routes } from './routes.ts'
 import { assets } from './public.ts'
 import { Home } from './Home.tsx'
 import { JsonPage } from './json.tsx'

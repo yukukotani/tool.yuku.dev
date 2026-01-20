@@ -1,6 +1,6 @@
 import type { Remix } from "@remix-run/dom";
 
-import { routes } from "../routes.ts";
+import { routes } from "./routes.ts";
 
 export function Document({
   title = "Developer Tools",
@@ -26,14 +26,14 @@ export function Document({
             padding: 0;
             box-sizing: border-box;
           }
-          
+
           body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #ffffff;
             color: #1f2937;
             line-height: 1.5;
           }
-          
+
           a {
             color: inherit;
             text-decoration: none;

@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { InferRouteHandler } from "@remix-run/fetch-router";
 
-import { routes } from "../routes.ts";
+import { routes } from "./routes.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

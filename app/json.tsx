@@ -1,5 +1,5 @@
 import type { InferRouteHandler } from '@remix-run/fetch-router'
-import { routes } from '../routes.ts'
+import { routes } from './routes.ts'
 import { render } from './utils/render.ts'
 import { Layout } from './layout.tsx'
 import { JsonEditor } from './assets/JsonEditor.tsx'
