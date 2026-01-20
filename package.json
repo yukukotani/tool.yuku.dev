@@ -4,30 +4,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --hot src/index.ts",
-    "build:css": "bunx @tailwindcss/cli -i ./src/index.css -o ./src/index.processed.css && cp ./src/index.processed.css ./src/index.css",
-    "build": "bun run build:css && bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
-    "start": "NODE_ENV=production bun src/index.ts"
+    "dev": "NODE_ENV=development tsx watch server.ts",
+    "dev:browser": "esbuild app/assets/*.{ts,tsx} --outbase=app/assets --outdir=dist/assets --bundle --minify --splitting --format=esm --entry-names='[dir]/[name]' --chunk-names='chunks/[name]-[hash]' --sourcemap --watch",
+    "build": "esbuild app/assets/*.{ts,tsx} --outbase=app/assets --outdir=dist/assets --bundle --minify --splitting --format=esm --entry-names='[dir]/[name]' --chunk-names='chunks/[name]-[hash]'",
+    "start": "NODE_ENV=production tsx server.ts"
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.139.1",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.554.0",
-    "react": "^19",
-    "react-dom": "^19",
-    "react-syntax-highlighter": "^16.1.0",
-    "tailwind-merge": "^3.4.0"
+    "@remix-run/dom": "^0.0.0-experimental-remix-jam.1",
+    "@remix-run/events": "^0.0.0-experimental-remix-jam.1",
+    "@remix-run/fetch-router": "^0.14.0",
+    "@remix-run/lazy-file": "^4.2.0",
+    "@remix-run/node-fetch-server": "^0.13.0",
+    "playwright": "^1.57.0"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.17",
     "@types/bun": "latest",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/react-syntax-highlighter": "^15.5.13",
-    "autoprefixer": "^10.4.22",
-    "bun-plugin-tailwind": "^0.1.2",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17"
+    "@types/node": "^25.0.9",
+    "esbuild": "^0.27.2",
+    "tsx": "^4.21.0"
   }
 }
